@@ -42,5 +42,15 @@ namespace Core.Test.Entities
             _vendingMachine.Insert(Coin.Quarter);
             _displayMock.Verify(s => s.Update(0.25m), Times.Once());
         }
+
+        [Test]
+        public void InsertShouldReturnCoin()
+        {
+            var returnedCoin = Coin.Quarter;
+            _vendingMachine.ReturnCoin += (sender, args) => returnedCoin = args.Coin;
+
+            _vendingMachine.Insert(Coin.Penny);
+            Assert.AreEqual(Coin.Penny, returnedCoin);
+        }
     }
 }

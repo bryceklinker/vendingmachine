@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System.Collections.Generic;
+using Core.Entities;
 using TechTalk.SpecFlow;
 
 namespace AcceptanceTests.Steps
@@ -9,7 +10,12 @@ namespace AcceptanceTests.Steps
         [Given(@"a vending machine")]
         public void GivenAVendingMachine()
         {
-            ScenarioContext.Current.VendingMachine(new VendingMachine());
+            var returnedCoins = new List<Coin>();
+            var vendingMachine = new VendingMachine();
+            vendingMachine.ReturnCoin += (sender, args) => returnedCoins.Add(args.Coin);
+
+            ScenarioContext.Current.ReturnedCoins(returnedCoins);
+            ScenarioContext.Current.VendingMachine(vendingMachine);
         }
     }
 }

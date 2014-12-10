@@ -18,3 +18,14 @@ Examples:
 | Dime                  | $0.10   |
 | Nickel                | $0.05   |
 | Quarter, Dime, Nickel | $0.40   |
+
+Scenario Outline: Pennies are returned
+	When I insert <Coins>
+	Then <ReturnedCoins> are returned
+	And the display should say <Display>
+Examples: 
+| Coins          | ReturnedCoins | Display     |
+| Penny          | Penny         | INSERT COIN |
+| Quarter, Penny | Penny         | $0.25       |
+| Dime, Penny    | Penny         | $0.10       |
+| Nickel, Penny  | Penny         | $0.05       |

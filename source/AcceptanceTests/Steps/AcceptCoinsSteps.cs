@@ -26,6 +26,13 @@ namespace AcceptanceTests.Steps
             Assert.AreEqual(display, ScenarioContext.Current.VendingMachine().DisplayText);
         }
 
+        [Then(@"(.*) are returned")]
+        public void ThenCoinsAreReturned(string coinString)
+        {
+            var coins = Parse(coinString);
+            foreach (var coin in coins)
+                Assert.Contains(coin, ScenarioContext.Current.ReturnedCoins());
+        }
 
         private IEnumerable<Coin> Parse(string coinString)
         {

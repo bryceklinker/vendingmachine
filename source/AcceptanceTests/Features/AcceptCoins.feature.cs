@@ -108,6 +108,29 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Pennies are returned")]
+        [NUnit.Framework.TestCaseAttribute("Penny", "Penny", "INSERT COIN", null)]
+        [NUnit.Framework.TestCaseAttribute("Quarter, Penny", "Penny", "$0.25", null)]
+        [NUnit.Framework.TestCaseAttribute("Dime, Penny", "Penny", "$0.10", null)]
+        [NUnit.Framework.TestCaseAttribute("Nickel, Penny", "Penny", "$0.05", null)]
+        public virtual void PenniesAreReturned(string coins, string returnedCoins, string display, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pennies are returned", exampleTags);
+#line 22
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 23
+ testRunner.When(string.Format("I insert {0}", coins), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 24
+ testRunner.Then(string.Format("{0} are returned", returnedCoins), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 25
+ testRunner.And(string.Format("the display should say {0}", display), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
