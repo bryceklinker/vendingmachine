@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Core.Entities;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TechTalk.SpecFlow;
 
 namespace AcceptanceTests.Steps
@@ -13,7 +9,7 @@ namespace AcceptanceTests.Steps
         [When(@"I insert (.*)")]
         public void WhenIInsertCoins(string coinString)
         {
-            var coins = Parse(coinString);
+            var coins = CoinParser.Parse(coinString);
 
             var vendingMachine = ScenarioContext.Current.VendingMachine();
             foreach (var coin in coins)
@@ -29,16 +25,9 @@ namespace AcceptanceTests.Steps
         [Then(@"(.*) are returned")]
         public void ThenCoinsAreReturned(string coinString)
         {
-            var coins = Parse(coinString);
+            var coins = CoinParser.Parse(coinString);
             foreach (var coin in coins)
                 Assert.Contains(coin, ScenarioContext.Current.ReturnedCoins());
-        }
-
-        private IEnumerable<Coin> Parse(string coinString)
-        {
-            return coinString.Split(',')
-                .Select(s => Enum.Parse(typeof(Coin), s, true))
-                .OfType<Coin>();
         }
     }
 }

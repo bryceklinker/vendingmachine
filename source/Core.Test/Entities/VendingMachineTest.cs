@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System.Collections.Generic;
+using Core.Entities;
 using Moq;
 using NUnit.Framework;
 
@@ -51,6 +52,32 @@ namespace Core.Test.Entities
 
             _vendingMachine.Insert(Coin.Penny);
             Assert.AreEqual(Coin.Penny, returnedCoin);
+        }
+
+        [Test]
+        public void ReturnCoinsShouldReturnBalance()
+        {
+            var coins = new List<Coin>
+            {
+                Coin.Quarter,
+                Coin.Dime
+            };
+            _balanceMock.Setup(s => s.Return()).Returns(coins);
+
+            var returnedCoins = new List<Coin>();
+            _vendingMachine.ReturnCoin += (sender, args) => returnedCoins.Add(args.Coin);
+
+            _vendingMachine.ReturnCoins();
+            Assert.AreEqual(2, coins.Count);
+        }
+
+        [Test]
+        public void ReturnCoinsShouldUpdateDisplay()
+        {
+            _balanceMock.Setup(s => s.CurrentBalance).Returns(0.0m);
+
+            _vendingMachine.ReturnCoins();
+            _displayMock.Verify(s => s.Update(0.0m), Times.Once());
         }
     }
 }

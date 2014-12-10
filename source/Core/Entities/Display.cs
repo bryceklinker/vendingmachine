@@ -14,7 +14,7 @@
         {
             get
             {
-                if (!_currentValue.HasValue)
+                if (_currentValue.GetValueOrDefault(0m) == 0m)
                     return "INSERT COIN";
 
                 return _currentValue.Value.ToString("c");

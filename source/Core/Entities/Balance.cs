@@ -1,28 +1,41 @@
-﻿namespace Core.Entities
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Core.Entities
 {
     public interface IBalance
     {
-        void Add(Coin coin);
         decimal CurrentBalance { get; }
+        void Add(Coin coin);
+        IEnumerable<Coin> Return();
     }
 
     public class Balance : IBalance
     {
-        private decimal _currentBalance;
+        private readonly List<Coin> _coins; 
+
+        public decimal CurrentBalance
+        {
+            get { return _coins.Select(c => c.AsValue()).Sum(); }
+        }
 
         public Balance()
         {
-            _currentBalance = 0.0m;
+            _coins = new List<Coin>();
         }
 
         public void Add(Coin coin)
         {
-            _currentBalance += coin.AsValue();
+            _coins.Add(coin);
         }
 
-        public decimal CurrentBalance
+        public IEnumerable<Coin> Return()
         {
-            get { return _currentBalance; }
+            foreach (var coin in _coins)
+                yield return coin;
+
+            _coins.Clear();
+            
         }
     }
 }

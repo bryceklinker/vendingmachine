@@ -26,5 +26,13 @@ namespace Core.Test.Entities
             _display.Update(0.45m);
             Assert.AreEqual("$0.45", _display.Text);
         }
+
+        [Test]
+        public void UpdateWithZeroShouldChangeTextToInsertCoin()
+        {
+            _display.Update(0.45m);
+            _display.Update(0.0m);
+            Assert.AreEqual("INSERT COIN", _display.Text);
+        }
     }
 }

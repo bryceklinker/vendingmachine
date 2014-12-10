@@ -7,6 +7,7 @@ namespace Core.Entities
         string DisplayText { get; }
         void Insert(Coin coin);
         event EventHandler<ReturnCoinArgs> ReturnCoin;
+        void ReturnCoins();
     }
 
     public class VendingMachine : IVendingMachine
@@ -42,6 +43,14 @@ namespace Core.Entities
         private void AddCoin(Coin coin)
         {
             _balance.Add(coin);
+            _display.Update(_balance.CurrentBalance);
+        }
+
+        public void ReturnCoins()
+        {
+            foreach (var coin in _balance.Return())
+                RaiseReturnCoin(coin);
+
             _display.Update(_balance.CurrentBalance);
         }
 
