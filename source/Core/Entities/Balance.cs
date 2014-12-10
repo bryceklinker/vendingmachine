@@ -8,10 +8,13 @@ namespace Core.Entities
         decimal CurrentBalance { get; }
         void Add(Coin coin);
         IEnumerable<Coin> Return();
+        bool CanPurchase(ProductType cola);
+        void Purchase(ProductType chips);
     }
 
     public class Balance : IBalance
     {
+        private readonly IProductPricing _productPricing;
         private readonly List<Coin> _coins; 
 
         public decimal CurrentBalance
@@ -20,7 +23,14 @@ namespace Core.Entities
         }
 
         public Balance()
+            : this(new ProductPricing())
         {
+            
+        }
+
+        public Balance(IProductPricing productPricing)
+        {
+            _productPricing = productPricing;
             _coins = new List<Coin>();
         }
 
@@ -36,6 +46,16 @@ namespace Core.Entities
 
             _coins.Clear();
             
+        }
+
+        public bool CanPurchase(ProductType cola)
+        {
+            return _productPricing.GetCost(cola) <= CurrentBalance;
+        }
+
+        public void Purchase(ProductType chips)
+        {
+            _coins.Clear();
         }
     }
 }

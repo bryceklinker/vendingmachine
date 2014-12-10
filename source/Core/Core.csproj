@@ -41,8 +41,11 @@
   <ItemGroup>
     <Compile Include="Entities\Balance.cs" />
     <Compile Include="Entities\Coin.cs" />
+    <Compile Include="Entities\ProductPricing.cs" />
+    <Compile Include="Entities\ProductDispensedArgs.cs" />
     <Compile Include="Entities\Display.cs" />
-    <Compile Include="Entities\ReturnCoinArgs.cs" />
+    <Compile Include="Entities\ProductType.cs" />
+    <Compile Include="Entities\CoinReturnedArgs.cs" />
     <Compile Include="Entities\VendingMachine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

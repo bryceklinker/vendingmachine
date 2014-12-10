@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Core.Entities;
+using Moq;
 using NUnit.Framework;
 
 namespace Core.Test.Entities
@@ -8,11 +9,13 @@ namespace Core.Test.Entities
     public class BalanceTest
     {
         private Balance _balance;
+        private Mock<IProductPricing> _productPricingMock;
 
         [SetUp]
         public void Setup()
         {
-            _balance = new Balance();
+            _productPricingMock = new Mock<IProductPricing>();
+            _balance = new Balance(_productPricingMock.Object);
         }
 
         [Test]
@@ -60,6 +63,48 @@ namespace Core.Test.Entities
             _balance.Add(Coin.Quarter);
 
             _balance.Return().ToList();
+            Assert.AreEqual(0.0m, _balance.CurrentBalance);
+        }
+
+        [Test]
+        public void CanPurchaseShouldBeTrue()
+        {
+            _balance.Add(Coin.Quarter);
+            _balance.Add(Coin.Quarter);
+            _productPricingMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.50m);
+
+            var canPurchase = _balance.CanPurchase(ProductType.Cola);
+            Assert.IsTrue(canPurchase);
+        }
+
+        [Test]
+        public void CanPurchaseShouldBeTrueIfBalanceGreaterThanCost()
+        {
+            _balance.Add(Coin.Quarter);
+            _productPricingMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.05m);
+
+            var canPurchase = _balance.CanPurchase(ProductType.Chips);
+            Assert.IsTrue(canPurchase);
+        }
+
+        [Test]
+        public void CanPurchaseShouldBeFalse()
+        {
+            _balance.Add(Coin.Quarter);
+            _productPricingMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.75m);
+
+            var canPurchase = _balance.CanPurchase(ProductType.Chips);
+            Assert.IsFalse(canPurchase);
+        }
+
+        [Test]
+        public void PurchaseShouldReduceBalance()
+        {
+            _balance.Add(Coin.Quarter);
+            _balance.Add(Coin.Quarter);
+            _productPricingMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.45m);
+
+            _balance.Purchase(ProductType.Cola);
             Assert.AreEqual(0.0m, _balance.CurrentBalance);
         }
     }

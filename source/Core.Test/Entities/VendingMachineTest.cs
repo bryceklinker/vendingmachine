@@ -48,7 +48,7 @@ namespace Core.Test.Entities
         public void InsertShouldReturnCoin()
         {
             var returnedCoin = Coin.Quarter;
-            _vendingMachine.ReturnCoin += (sender, args) => returnedCoin = args.Coin;
+            _vendingMachine.CoinReturned += (sender, args) => returnedCoin = args.Coin;
 
             _vendingMachine.Insert(Coin.Penny);
             Assert.AreEqual(Coin.Penny, returnedCoin);
@@ -65,7 +65,7 @@ namespace Core.Test.Entities
             _balanceMock.Setup(s => s.Return()).Returns(coins);
 
             var returnedCoins = new List<Coin>();
-            _vendingMachine.ReturnCoin += (sender, args) => returnedCoins.Add(args.Coin);
+            _vendingMachine.CoinReturned += (sender, args) => returnedCoins.Add(args.Coin);
 
             _vendingMachine.ReturnCoins();
             Assert.AreEqual(2, coins.Count);
@@ -78,6 +78,57 @@ namespace Core.Test.Entities
 
             _vendingMachine.ReturnCoins();
             _displayMock.Verify(s => s.Update(0.0m), Times.Once());
+        }
+
+        [Test]
+        public void DispenseShouldDispenseCola()
+        {
+            _balanceMock.Setup(s => s.CanPurchase(ProductType.Cola)).Returns(true);
+
+            var dispensedProduct = ProductType.Chips;
+            _vendingMachine.ProductDispensed += (sender, args) => dispensedProduct = args.ProductType;
+
+            _vendingMachine.Purchase(ProductType.Cola);
+            Assert.AreEqual(ProductType.Cola, dispensedProduct);
+        }
+
+        [Test]
+        public void DispenseShouldNotDispenseCola()
+        {
+            _balanceMock.Setup(s => s.CanPurchase(ProductType.Cola)).Returns(false);
+
+            ProductType? dispensedProduct = null;
+            _vendingMachine.ProductDispensed += (sender, args) => dispensedProduct = args.ProductType;
+
+            _vendingMachine.Purchase(ProductType.Cola);
+            Assert.IsNull(dispensedProduct);
+        }
+
+        [Test]
+        public void DispenseShouldPurchaseProduct()
+        {
+            _balanceMock.Setup(s => s.CanPurchase(ProductType.Chips)).Returns(true);
+
+            _vendingMachine.Purchase(ProductType.Chips);
+            _balanceMock.Verify(s => s.Purchase(ProductType.Chips), Times.Once());
+        }
+
+        [Test]
+        public void DispenseShouldDisplayThankYou()
+        {
+            _balanceMock.Setup(s => s.CanPurchase(ProductType.Candy)).Returns(true);
+
+            _vendingMachine.Purchase(ProductType.Candy);
+            _displayMock.Verify(s => s.ThankYou(), Times.Once());
+        }
+
+        [Test]
+        public void DispanseShouldDisplayCost()
+        {
+            _balanceMock.Setup(s => s.CanPurchase(ProductType.Cola)).Returns(false);
+
+            _vendingMachine.Purchase(ProductType.Cola);
+            _displayMock.Verify(s => s.Cost(ProductType.Cola), Times.Once());
         }
     }
 }

@@ -55,12 +55,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReturnCoins.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\SelectProduct.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SelectProduct.feature</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScenarioContextExtensions.cs" />
     <Compile Include="Steps\AcceptCoinsSteps.cs" />
     <Compile Include="Steps\CoinParser.cs" />
     <Compile Include="Steps\CommonSteps.cs" />
     <Compile Include="Steps\ReturnCoinsSteps.cs" />
+    <Compile Include="Steps\SelectProduct.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -71,6 +77,10 @@
     <None Include="Features\ReturnCoins.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ReturnCoins.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\SelectProduct.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SelectProduct.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -2,11 +2,11 @@
 
 namespace Core.Entities
 {
-    public class ReturnCoinArgs : EventArgs
+    public class CoinReturnedArgs : EventArgs
     {
         public Coin Coin { get; private set; }
 
-        public ReturnCoinArgs(Coin coin)
+        public CoinReturnedArgs(Coin coin)
         {
             Coin = coin;
         }

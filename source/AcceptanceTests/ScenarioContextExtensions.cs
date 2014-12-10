@@ -7,6 +7,7 @@ namespace AcceptanceTests
     public static class ScenarioContextExtensions
     {
         private const string ReturnedCoinsKey = "ReturnedCoins";
+        private const string DispensedProductsKey = "DispensedProducts";
         private const string VendingMachineKey = "VendingMachine";
 
         public static IVendingMachine VendingMachine(this ScenarioContext scenarioContext)
@@ -27,6 +28,16 @@ namespace AcceptanceTests
         public static void ReturnedCoins(this ScenarioContext scenarioContext, List<Coin> coins)
         {
             scenarioContext.Set(coins, ReturnedCoinsKey);
+        }
+
+        public static List<ProductType> DispensedProducts(this ScenarioContext scenarioContext)
+        {
+            return scenarioContext.SafeGet<List<ProductType>>(DispensedProductsKey);
+        }
+
+        public static void DispensedProducts(this ScenarioContext scenarioContext, List<ProductType> dispensedProductTypes)
+        {
+            scenarioContext.Set(dispensedProductTypes, DispensedProductsKey);
         }
 
         private static T SafeGet<T>(this ScenarioContext scenarioContext, string key)
