@@ -5,6 +5,9 @@
 
 Background: 
 	Given a vending machine
+	And vending machine has 5 Cola
+	And vending machine has 5 Chips
+	And vending machine has 5 Candy
 
 Scenario Outline: Select product with exact change
 	Given I have inserted <Coins>

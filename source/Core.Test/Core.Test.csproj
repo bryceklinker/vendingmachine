@@ -48,7 +48,7 @@
     <Compile Include="Entities\BalanceTest.cs" />
     <Compile Include="Entities\CoinTest.cs" />
     <Compile Include="Entities\DisplayTest.cs" />
-    <Compile Include="Entities\ProductPricingTest.cs" />
+    <Compile Include="Entities\InventoryTest.cs" />
     <Compile Include="Entities\VendingMachineTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

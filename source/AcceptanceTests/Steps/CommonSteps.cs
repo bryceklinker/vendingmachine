@@ -13,13 +13,24 @@ namespace AcceptanceTests.Steps
             var returnedCoins = new List<Coin>();
             var dispensedProducts = new List<ProductType>();
 
-            var vendingMachine = new VendingMachine();
+            var inventory = new Inventory();
+
+            var vendingMachine = new VendingMachine(inventory);
             vendingMachine.CoinReturned += (sender, args) => returnedCoins.Add(args.Coin);
             vendingMachine.ProductDispensed += (sender, args) => dispensedProducts.Add(args.ProductType);
 
+            ScenarioContext.Current.Inventory(inventory);
             ScenarioContext.Current.ReturnedCoins(returnedCoins);
             ScenarioContext.Current.DispensedProducts(dispensedProducts);
             ScenarioContext.Current.VendingMachine(vendingMachine);
+        }
+
+        [Given(@"vending machine has (.*) (.*)")]
+        public void GivenVendingMachineHasCola(int quantity, ProductType productType)
+        {
+            var inventory = ScenarioContext.Current.Inventory();
+            for (int i = 0; i < quantity; i++)
+                inventory.Add(productType);
         }
     }
 }

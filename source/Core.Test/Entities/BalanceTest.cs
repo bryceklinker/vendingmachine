@@ -9,13 +9,13 @@ namespace Core.Test.Entities
     public class BalanceTest
     {
         private Balance _balance;
-        private Mock<IProductPricing> _productPricingMock;
+        private Mock<IInventory> _inventoryMock;
 
         [SetUp]
         public void Setup()
         {
-            _productPricingMock = new Mock<IProductPricing>();
-            _balance = new Balance(_productPricingMock.Object);
+            _inventoryMock = new Mock<IInventory>();
+            _balance = new Balance(_inventoryMock.Object);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace Core.Test.Entities
         {
             _balance.Add(Coin.Quarter);
             _balance.Add(Coin.Quarter);
-            _productPricingMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.50m);
+            _inventoryMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.50m);
 
             var canPurchase = _balance.CanPurchase(ProductType.Cola);
             Assert.IsTrue(canPurchase);
@@ -81,7 +81,7 @@ namespace Core.Test.Entities
         public void CanPurchaseShouldBeTrueIfBalanceGreaterThanCost()
         {
             _balance.Add(Coin.Quarter);
-            _productPricingMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.05m);
+            _inventoryMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.05m);
 
             var canPurchase = _balance.CanPurchase(ProductType.Chips);
             Assert.IsTrue(canPurchase);
@@ -91,7 +91,7 @@ namespace Core.Test.Entities
         public void CanPurchaseShouldBeFalse()
         {
             _balance.Add(Coin.Quarter);
-            _productPricingMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.75m);
+            _inventoryMock.Setup(s => s.GetCost(ProductType.Chips)).Returns(0.75m);
 
             var canPurchase = _balance.CanPurchase(ProductType.Chips);
             Assert.IsFalse(canPurchase);
@@ -102,7 +102,7 @@ namespace Core.Test.Entities
         {
             _balance.Add(Coin.Quarter);
             _balance.Add(Coin.Quarter);
-            _productPricingMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.45m);
+            _inventoryMock.Setup(s => s.GetCost(ProductType.Cola)).Returns(0.45m);
 
             _balance.Purchase(ProductType.Cola);
             Assert.AreEqual(0.0m, _balance.CurrentBalance);

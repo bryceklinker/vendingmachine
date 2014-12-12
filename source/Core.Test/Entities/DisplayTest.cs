@@ -8,13 +8,13 @@ namespace Core.Test.Entities
     public class DisplayTest
     {
         private Display _display;
-        private Mock<IProductPricing> _productPricingMock;
+        private Mock<IInventory> _inventoryMock;
 
         [SetUp]
         public void Setup()
         {
-            _productPricingMock = new Mock<IProductPricing>();
-            _display = new Display(_productPricingMock.Object);
+            _inventoryMock = new Mock<IInventory>();
+            _display = new Display(_inventoryMock.Object);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Core.Test.Entities
         {
             const ProductType productType = ProductType.Chips;
             const decimal cost = 3.4m;
-            _productPricingMock.Setup(s => s.GetCost(productType)).Returns(cost);
+            _inventoryMock.Setup(s => s.GetCost(productType)).Returns(cost);
 
             _display.Cost(productType);
             Assert.AreEqual(cost.ToString("c"), _display.Text);
@@ -54,7 +54,7 @@ namespace Core.Test.Entities
         {
             const ProductType productType = ProductType.Chips;
             const decimal cost = 1.4m;
-            _productPricingMock.Setup(s => s.GetCost(productType)).Returns(cost);
+            _inventoryMock.Setup(s => s.GetCost(productType)).Returns(cost);
 
             _display.Update(4.5m);
             _display.Cost(productType);
@@ -74,6 +74,21 @@ namespace Core.Test.Entities
         {
             _display.ThankYou();
             Assert.AreEqual(Display.ThankYouText, _display.Text);
+            Assert.AreEqual(Display.InsertCoinText, _display.Text);
+        }
+
+        [Test]
+        public void SoldOutShouldUpdateTextToSoldOut()
+        {
+            _display.SoldOut();
+            Assert.AreEqual(Display.SoldOutText, _display.Text);
+        }
+
+        [Test]
+        public void SoldOutShouldUpdateTextToInsertCoin()
+        {
+            _display.SoldOut();
+            Assert.AreEqual(Display.SoldOutText, _display.Text);
             Assert.AreEqual(Display.InsertCoinText, _display.Text);
         }
     }

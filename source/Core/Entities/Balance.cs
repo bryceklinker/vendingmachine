@@ -14,7 +14,7 @@ namespace Core.Entities
 
     public class Balance : IBalance
     {
-        private readonly IProductPricing _productPricing;
+        private readonly IInventory _inventory;
         private readonly List<Coin> _coins; 
 
         public decimal CurrentBalance
@@ -22,15 +22,9 @@ namespace Core.Entities
             get { return _coins.Select(c => c.AsValue()).Sum(); }
         }
 
-        public Balance()
-            : this(new ProductPricing())
+        public Balance(IInventory inventory)
         {
-            
-        }
-
-        public Balance(IProductPricing productPricing)
-        {
-            _productPricing = productPricing;
+            _inventory = inventory;
             _coins = new List<Coin>();
         }
 
@@ -50,7 +44,7 @@ namespace Core.Entities
 
         public bool CanPurchase(ProductType cola)
         {
-            return _productPricing.GetCost(cola) <= CurrentBalance;
+            return _inventory.GetCost(cola) <= CurrentBalance;
         }
 
         public void Purchase(ProductType chips)

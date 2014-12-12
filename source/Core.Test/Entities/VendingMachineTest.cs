@@ -10,6 +10,7 @@ namespace Core.Test.Entities
     {
         private Mock<IDisplay> _displayMock;
         private Mock<IBalance> _balanceMock;
+        private Mock<IInventory> _invetoryMock;
         private VendingMachine _vendingMachine;
 
         [SetUp]
@@ -17,7 +18,9 @@ namespace Core.Test.Entities
         {
             _displayMock = new Mock<IDisplay>();
             _balanceMock = new Mock<IBalance>();
-            _vendingMachine = new VendingMachine(_displayMock.Object, _balanceMock.Object);
+            _invetoryMock = new Mock<IInventory>();
+
+            _vendingMachine = new VendingMachine(_displayMock.Object, _balanceMock.Object, _invetoryMock.Object);
         }
 
         [Test]
@@ -81,7 +84,7 @@ namespace Core.Test.Entities
         }
 
         [Test]
-        public void DispenseShouldDispenseCola()
+        public void PurchaseShouldDispenseCola()
         {
             _balanceMock.Setup(s => s.CanPurchase(ProductType.Cola)).Returns(true);
 
@@ -93,7 +96,7 @@ namespace Core.Test.Entities
         }
 
         [Test]
-        public void DispenseShouldNotDispenseCola()
+        public void PurchaseShouldNotDispenseCola()
         {
             _balanceMock.Setup(s => s.CanPurchase(ProductType.Cola)).Returns(false);
 
@@ -105,7 +108,7 @@ namespace Core.Test.Entities
         }
 
         [Test]
-        public void DispenseShouldPurchaseProduct()
+        public void PurchaseShouldPurchaseProduct()
         {
             _balanceMock.Setup(s => s.CanPurchase(ProductType.Chips)).Returns(true);
 
@@ -114,7 +117,7 @@ namespace Core.Test.Entities
         }
 
         [Test]
-        public void DispenseShouldDisplayThankYou()
+        public void PurchaseShouldDisplayThankYou()
         {
             _balanceMock.Setup(s => s.CanPurchase(ProductType.Candy)).Returns(true);
 
@@ -129,6 +132,16 @@ namespace Core.Test.Entities
 
             _vendingMachine.Purchase(ProductType.Cola);
             _displayMock.Verify(s => s.Cost(ProductType.Cola), Times.Once());
+        }
+
+        [Test]
+        public void PurchaseShouldDisplaySoldOut()
+        {
+            _invetoryMock.Setup(s => s.IsSoldOut(ProductType.Cola)).Returns(true);
+
+            _vendingMachine.Purchase(ProductType.Cola);
+            _displayMock.Verify(s => s.SoldOut(), Times.Once());
+            _balanceMock.Verify(s => s.Purchase(ProductType.Cola), Times.Never());
         }
     }
 }

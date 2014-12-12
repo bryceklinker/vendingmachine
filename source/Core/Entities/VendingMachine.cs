@@ -16,6 +16,7 @@ namespace Core.Entities
     {
         private readonly IDisplay _display;
         private readonly IBalance _balance;
+        private readonly IInventory _inventory;
 
         public string DisplayText
         {
@@ -23,15 +24,22 @@ namespace Core.Entities
         }
 
         public VendingMachine()
-            : this(new Display(), new Balance())
+            : this(new Inventory())
         {
             
         }
 
-        public VendingMachine(IDisplay display, IBalance balance)
+        public VendingMachine(IInventory inventory)
+            : this(new Display(inventory), new Balance(inventory), inventory)
+        {
+            
+        }
+
+        public VendingMachine(IDisplay display, IBalance balance, IInventory inventory)
         {
             _display = display;
             _balance = balance;
+            _inventory = inventory;
         }
 
         public void Insert(Coin coin)
@@ -58,7 +66,9 @@ namespace Core.Entities
 
         public void Purchase(ProductType productType)
         {
-            if (_balance.CanPurchase(productType))
+            if (_inventory.IsSoldOut(productType))
+                _display.SoldOut();
+            else if (_balance.CanPurchase(productType))
                 PurchaseProduct(productType);
             else
                 _display.Cost(productType);

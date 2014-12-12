@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Core.Entities;
 using TechTalk.SpecFlow;
 
@@ -9,6 +10,7 @@ namespace AcceptanceTests
         private const string ReturnedCoinsKey = "ReturnedCoins";
         private const string DispensedProductsKey = "DispensedProducts";
         private const string VendingMachineKey = "VendingMachine";
+        private const string InventoryKey = "Inventory";
 
         public static IVendingMachine VendingMachine(this ScenarioContext scenarioContext)
         {
@@ -38,6 +40,16 @@ namespace AcceptanceTests
         public static void DispensedProducts(this ScenarioContext scenarioContext, List<ProductType> dispensedProductTypes)
         {
             scenarioContext.Set(dispensedProductTypes, DispensedProductsKey);
+        }
+
+        public static IInventory Inventory(this ScenarioContext scenarioContext)
+        {
+            return scenarioContext.SafeGet<IInventory>(InventoryKey);
+        }
+
+        public static void Inventory(this ScenarioContext scenarioContext, IInventory inventory)
+        {
+            scenarioContext.Set(inventory, InventoryKey);
         }
 
         private static T SafeGet<T>(this ScenarioContext scenarioContext, string key)
